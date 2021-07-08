@@ -1,12 +1,13 @@
 import React from 'react';
 import axios from 'axios';
+import { withRouter } from "react-router";
 import { NavLink } from 'react-router-dom';
 
 const NavigationComponent = (props) => {
     const dynamicLink = (route, linkText) => {
        return (
             <div className="nav-link-wrapper">
-                <NavLink to="/blog" activeClassName="nav-link-active">Blog</NavLink>
+                <NavLink to={route} activeClassName="nav-link-active">{linkText}</NavLink>
             </div> 
        );
     };
@@ -17,6 +18,9 @@ const NavigationComponent = (props) => {
                 props.history.push("/");
                 props.handleSuccessfulLogout();
             }
+            return response.data;
+        }).catch(error => {
+            console.log("Error signing out", error)
         })
     };
 
@@ -32,17 +36,21 @@ const NavigationComponent = (props) => {
                 <div className="nav-link-wrapper">
                     <NavLink to="/contact" activeClassName="nav-link-active">Contact</NavLink>
                 </div>
-                
+                <div className="nav-link-wrapper">
+                    <NavLink to="/blog" activeClassName="nav-link-active">Blog</NavLink>
+                </div>
                 {props.loggedInStatus === "LOGGED_IN" ?  
-                    dynamicLink("/blog", "Blog") 
+                    dynamicLink("/portfolio-manager", "Portfolio Manager") 
                 : null}
             </div>
 
             <div className="right-side">
                 ANDY BENNETT
+
+                {props.loggedInStatus === 'LOGGED_IN' ? <a onClick={handleSignOut}>Sign Out</a> : null}
             </div>
         </div>
     )
 }
 
-export default NavigationComponent;
+export default withRouter(NavigationComponent);
